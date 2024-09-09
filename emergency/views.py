@@ -81,20 +81,20 @@ def HelpMapPage(request):
 
     # Pass the user's location and volunteers' locations to the template
     context = {
-    'user_latitude': user_location.split(',')[0] if user_location else None,
-    'user_longitude': user_location.split(',')[1] if user_location else None,
+    'user_latitude': user_location.split(',')[0] ,
+    'user_longitude': user_location.split(',')[1] ,
     'volunteers': json.dumps(volunteer_locations)  # Convert to JSON string
 }
-
+    print("contextttttttttttttttttttttttt:",context)
     return render(request, 'help_map.html', context)
 
 @csrf_exempt
 def emergency(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
         try:
             data = json.loads(request.body)
             message = data.get('message', '')
-            
+            print("message",message)
             # Broadcast the message to all WebSocket clients
             from channels.layers import get_channel_layer
             channel_layer = get_channel_layer()
@@ -145,10 +145,14 @@ def show_route(request):
             vol_lat = float(request.GET.get('vol_lat', ''))
             vol_lng = float(request.GET.get('vol_lng', ''))
             print(lat,lng,vol_lat,vol_lng)
-    except ValueError:
+    except IndexError:
         return HttpResponseBadRequest("Invalid location parameters")
 
     # Prepare the URL for Google Maps Directions API
+
+
+
+
     directions_url = (
         f'https://maps.googleapis.com/maps/api/directions/json?'
         f'origin={vol_lat},{vol_lng}&destination={lat},{lng}&key=AIzaSyChgkH33dCjI4JEWruw7exKq1-oTBQrb5E'
@@ -159,6 +163,6 @@ def show_route(request):
     
     if response.status_code == 200:
         directions_data = response.json()
-        return render(request, 'route_map.html', {'directions_data': directions_data})
+        return render(request, 'show_route.html', {'directions_data': directions_data})
     else:
         return HttpResponseBadRequest("Failed to get directions")

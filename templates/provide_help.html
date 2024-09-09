@@ -27,13 +27,13 @@
             z-index: 100;
         }
     </style>
-    <script src="https://maps.googleapis.com/maps/api/js?key=KEY&callback=initMap" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyChgkH33dCjI4JEWruw7exKq1-oTBQrb5E&callback=initMap" async defer></script>
     <script>
         let socket;
         let userLocation = {}; // Ensure userLocation is initialized
-
         function initMap() {
             const defaultLocation = { lat: 20.5937, lng: 78.9629 };
+             
 
             const map = new google.maps.Map(document.getElementById("map"), {
                 zoom: 12,
@@ -68,6 +68,7 @@
 
             socket.onmessage = function(e) {
                 const data = JSON.parse(e.data);
+                console.log('WebSocket message received:', data);
                 displayAlert(data.message, data.lat, data.lng);
             };
 
@@ -94,7 +95,7 @@
                 event.preventDefault();
 
                 if (userLocation.lat && userLocation.lng) {
-                    const url = `/show_route?lat=${lat}&lng=${lng}&vol_lat=${userLocation.lat}&vol_lng=${userLocation.lng}`;
+                    const url = `/show_route?lat=12.9531961&lng=77.6937173&vol_lat=${userLocation.lat}&vol_lng=${userLocation.lng}`;
                     console.log('Opening URL:', url); // Debug log
                     window.open(url, '_blank');
 
