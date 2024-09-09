@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provide Help</title>
+    <style>
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        #alert {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: yellow;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 18px;
+            display: none;
+            z-index: 100;
+        }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyChgkH33dCjI4JEWruw7exKq1-oTBQrb5E&callback=initMap" async defer></script>
+    <script>
+        let socket;
+        let userLocation = {}; // Ensure userLocation is initialized
+
+        function initMap() {
+            const defaultLocation = { lat: 20.5937, lng: 78.9629 };
+
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 12,
+                center: defaultLocation
+            });
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    userLocation = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+
+                    new google.maps.Marker({
+                        position: userLocation,
+                        map: map,
+                        title: "You (Volunteer)",
+                        icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
+                    });
+
+                    map.setCenter(userLocation);
+                }, error => {
+                    console.error('Error fetching geolocation: ', error);
+                });
+            }
+
+            socket = new WebSocket('ws://' + window.location.host + '/ws/alerts/');
+
+            socket.onopen = function(e) {
+                console.log('WebSocket connected');
+            };
+
+            socket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                displayAlert(data.message, data.lat, data.lng);
+            };
+
+            socket.onerror = function(e) {
+                console.error('WebSocket encountered an error: ', e);
+            };
+
+            socket.onclose = function(e) {
+                console.error('WebSocket closed unexpectedly');
+            };
+        }
+
+        function displayAlert(message, lat, lng) {
+            const alertBox = document.getElementById('alert');
+            alertBox.innerHTML = `${message} 
+                <a href="#" id="help-link">Help</a>`;
+            alertBox.style.display = 'block';
+
+            setTimeout(() => {
+                alertBox.style.display = 'none';
+            }, 10000);
+
+            document.getElementById('help-link').addEventListener('click', function(event) {
+                event.preventDefault();
+
+                if (userLocation.lat && userLocation.lng) {
+                    const url = `/show_route?lat=${lat}&lng=${lng}&vol_lat=${userLocation.lat}&vol_lng=${userLocation.lng}`;
+                    console.log('Opening URL:', url); // Debug log
+                    window.open(url, '_blank');
+
+                    socket.send(JSON.stringify({ type: 'help_arriving', message: 'Help is on the way' }));
+                } else {
+                    console.error('User location is not defined.');
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <div id="map"></div>
+    <div id="alert"></div>
+</body>
+</html>

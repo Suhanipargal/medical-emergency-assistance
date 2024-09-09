@@ -1,0 +1,72 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Medical Emergency</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        /* Custom class to make the cards longer */
+        .custom-margin-top {
+        margin-top: 100px; /* Increase this value for more spacing */
+        }
+        .long-card {
+          height: 400px; /* Adjust this value to make the card longer */
+        }
+        .card-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: center;
+      }
+      .card-img {
+        max-height: 150px; /* Adjust height for image */
+        object-fit: contain;
+        margin-bottom: 20px;
+      }
+      </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg text-bg-secondary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/">MEDICAL ASSISTANCE</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+              <a class="nav-link" aria-current="page" href="/login">Login</a>
+              <a class="nav-link" href="/signup">Signup</a>
+            </div>
+          </div>
+        </div>
+    </nav>
+    <!-- Add a margin between the navbar and the cards -->
+    <div class="container custom-margin-top">
+      <div class="row justify-content-center">
+        <div class="col-sm-6 mb-3 mb-sm-0">
+          <div class="card long-card">
+            <div class="card-body text-bg-secondary">
+                <img src="{% static 'images/image.png' %}" class="card-img" alt="Volunteers">
+                <h5 class="card-title">Volunteers</h5>
+                <p class="card-text">Our team makes a difference in the community.</p>
+                <a href="{% url 'provide_help' %}" class="btn btn-primary">Provide Help</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="card long-card">
+            <div class="card-body text-bg-secondary">
+                <img src="{% static 'images/th.jpg' %}" class="card-img" alt="People in Need">
+                <h5 class="card-title">Need Help?</h5>
+                <p class="card-text">We are here to provide you with the assistance you need.</p>
+                <a href="{% url 'help_map' %}" class="btn btn-primary">Get Help</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  </body>
+</html>

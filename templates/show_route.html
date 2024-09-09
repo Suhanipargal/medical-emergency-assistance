@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Route Map</title>
+    <style>
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyChgkH33dCjI4JEWruw7exKq1-oTBQrb5E&callback=initMap" async defer></script>
+    <script>
+        function initMap() {
+            const directions = JSON.parse('{{ directions|safe }}');
+
+            if (!directions || !directions.routes || directions.routes.length === 0) {
+                console.error('No directions data available');
+                return;
+            }
+
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 12,
+                center: { lat: directions.routes[0].legs[0].start_location.lat, lng: directions.routes[0].legs[0].start_location.lng }
+            });
+
+            const directionsRenderer = new google.maps.DirectionsRenderer();
+            directionsRenderer.setMap(map);
+
+            const directionsService = new google.maps.DirectionsService();
+            directionsRenderer.setDirections(directions);
+        }
+    </script>
+</head>
+<body>
+    <div id="map"></div>
+</body>
+</html>
