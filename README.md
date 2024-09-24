@@ -1,6 +1,4 @@
-Here’s the code for the README file that you can add to your repository:
 
-```markdown
 # Medical Emergency Assistance Web Application
 
 This repository contains a **Medical Emergency Assistance Web Application** that helps individuals in urgent medical need by connecting them with nearby volunteers. The application features real-time location tracking, volunteer notification, user authentication, and an SOS button that sends the user's current location to pre-selected contacts.
